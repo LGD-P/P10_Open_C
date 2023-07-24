@@ -18,11 +18,13 @@ from django.contrib import admin
 from django.urls import path, include
 
 from rest_framework import routers
+from authenticate.views import UserViewset
 from app.views import (ProjectViewset, ContributorViewset,
                        IssuetViewset, CommentViewset)
 
 router = routers.SimpleRouter()
 
+router.register('user', UserViewset, basename='user')
 router.register('projet', ProjectViewset, basename='projet')
 router.register('contributor', ContributorViewset, basename='contributor')
 router.register('issue', IssuetViewset, basename='issue')
