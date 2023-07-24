@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Contributor, Projet, Issue, Comment
+from .models import Contributor, Project, Issue, Comment
 
 
 @admin.register(Contributor)
@@ -9,8 +9,8 @@ class ContributorAdmin(admin.ModelAdmin):
     list_filter = list_display
 
 
-@admin.register(Projet)
-class ProjetAdmin(admin.ModelAdmin):
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
     list_display = [
         "author", "name", "description",
         "type"]

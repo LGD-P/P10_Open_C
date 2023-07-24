@@ -1,13 +1,14 @@
 [tool.poetry]
-name = "sofdesk"
-version = "0.1.0"
-description = "Api"
+name = "softdesk"
+version = "v1"
+description = ""
 authors = ["LGD"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "3.11.4"
 djangorestframework = "^3.14.0"
+django-debug-toolbar = "^4.1.0"
 
 
 [build-system]

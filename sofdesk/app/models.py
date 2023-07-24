@@ -5,7 +5,7 @@ from django.db import models
 from authenticate.models import User
 
 
-class Projet(models.Model):
+class Project(models.Model):
     TYPE_CHOICES = (
         ("back-end", "back-end"), ("front-end", "front-end"),
         ("iOS", "iOS"), ("Android", "Android")
@@ -19,7 +19,7 @@ class Projet(models.Model):
 
 class Contributor(models.Model):
     author = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    projet = models.ForeignKey(to=Projet, on_delete=models.CASCADE)
+    projet = models.ForeignKey(to=Project, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True)
 
 
@@ -49,7 +49,7 @@ class Issue(models.Model):
                               max_length=15, blank=True)
     created_time = models.DateTimeField(auto_now_add=True)
     projet = models.ForeignKey(
-        to=Projet, on_delete=models.CASCADE, related_name='issues')
+        to=Project, on_delete=models.CASCADE, related_name='issues')
 
 
 class Comment(models.Model):
