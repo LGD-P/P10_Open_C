@@ -18,11 +18,15 @@ from django.contrib import admin
 from django.urls import path, include
 
 from rest_framework import routers
-from app.views import ProjectViewset
+from app.views import (ProjectViewset, ContributorViewset,
+                       IssuetViewset, CommentViewset)
 
 router = routers.SimpleRouter()
 
 router.register('projet', ProjectViewset, basename='projet')
+router.register('contributor', ContributorViewset, basename='contributor')
+router.register('issue', IssuetViewset, basename='issue')
+router.register('comment', CommentViewset, basename='comment')
 
 
 urlpatterns = [
