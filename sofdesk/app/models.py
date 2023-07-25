@@ -16,10 +16,13 @@ class Project(models.Model):
     type = models.CharField(choices=TYPE_CHOICES, max_length=15, blank=True,)
     created_time: models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Contributor(models.Model):
     author = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    projet = models.ForeignKey(to=Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True)
 
 
@@ -48,8 +51,11 @@ class Issue(models.Model):
     status = models.CharField(choices=STATUS_CHOICES,
                               max_length=15, blank=True)
     created_time = models.DateTimeField(auto_now_add=True)
-    projet = models.ForeignKey(
+    project = models.ForeignKey(
         to=Project, on_delete=models.CASCADE, related_name='issues')
+
+    def __str__(self):
+        return self.name
 
 
 class Comment(models.Model):

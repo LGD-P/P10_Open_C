@@ -10,3 +10,7 @@ class UserViewset(ModelViewSet):
 
     def get_queryset(self):
         return User.objects.all()
+
+    def perform_create(self, serializer_class):
+        instance = serializer_class.save()
+        instance.user_under_15()

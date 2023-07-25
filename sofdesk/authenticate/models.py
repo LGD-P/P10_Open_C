@@ -8,3 +8,11 @@ class User(AbstractUser):
     can_be_shared = models.BooleanField(default=False)
     created_time = models.DateTimeField(auto_now_add=True)
     age = models.PositiveBigIntegerField(blank=False, null=False, default=15)
+
+    def user_under_15(self):
+        if self.age <= 15:
+            self.can_be_contacted = False
+            self.can_be_shared = False
+
+    def __str__(self) -> str:
+        return self.username

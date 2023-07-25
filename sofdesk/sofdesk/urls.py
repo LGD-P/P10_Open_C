@@ -25,7 +25,7 @@ from app.views import (ProjectViewset, ContributorViewset,
 router = routers.SimpleRouter()
 
 router.register('user', UserViewset, basename='user')
-router.register('projet', ProjectViewset, basename='projet')
+router.register('project', ProjectViewset, basename='project')
 router.register('contributor', ContributorViewset, basename='contributor')
 router.register('issue', IssuetViewset, basename='issue')
 router.register('comment', CommentViewset, basename='comment')
