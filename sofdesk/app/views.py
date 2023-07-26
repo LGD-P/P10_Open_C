@@ -19,7 +19,7 @@ class ProjectViewset(ModelViewSet):
         instance = serializer_class.save()
         author = User.objects.get(pk=instance.author_id)
         project_id = Project.objects.get(pk=instance.id)
-        contributor = Contributor(author=author, projet=project_id)
+        contributor = Contributor(author=author, project=project_id)
         contributor.save()
 
 
