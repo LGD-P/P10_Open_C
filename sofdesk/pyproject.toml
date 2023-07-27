@@ -3,7 +3,7 @@ name = "sofdesk"
 version = "v1"
 description = ""
 authors = ["lgd"]
-readme = "README.md"
+readme = ""
 
 [tool.poetry.dependencies]
 python = "^3.11"

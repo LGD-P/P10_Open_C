@@ -4,7 +4,7 @@ from rest_framework.serializers import ModelSerializer, StringRelatedField
 from app.models import Project, Contributor, Issue, Comment
 
 
-class ProjectSerialiser(ModelSerializer, StringRelatedField):
+class ProjectJsonSerialiser(ModelSerializer):
     author = StringRelatedField()
 
     class Meta:
@@ -12,16 +12,30 @@ class ProjectSerialiser(ModelSerializer, StringRelatedField):
         fields = "__all__"
 
 
-class ContributorSerialiser(ModelSerializer, StringRelatedField):
+class ProjectSerialiser(ModelSerializer):
+
+    class Meta:
+        model = Project
+        fields = "__all__"
+
+
+class ContributorJsonSerialiser(ModelSerializer, StringRelatedField):
     author = StringRelatedField()
-    projet = StringRelatedField()
+    project = StringRelatedField()
 
     class Meta:
         model = Contributor
         fields = "__all__"
 
 
-class IssueSerialiser(ModelSerializer, StringRelatedField):
+class ContributorSerialiser(ModelSerializer):
+
+    class Meta:
+        model = Contributor
+        fields = "__all__"
+
+
+class IssueJsonSerialiser(ModelSerializer, StringRelatedField):
     author = StringRelatedField()
     assign_to = StringRelatedField()
     project = StringRelatedField()
@@ -31,8 +45,23 @@ class IssueSerialiser(ModelSerializer, StringRelatedField):
         fields = "__all__"
 
 
-class CommentSerialiser(ModelSerializer, StringRelatedField):
+class IssueSerialiser(ModelSerializer):
+
+    class Meta:
+        model = Issue
+        fields = "__all__"
+
+
+class CommentJsonSerialiser(ModelSerializer, StringRelatedField):
     author = StringRelatedField()
+    issue = StringRelatedField()
+
+    class Meta:
+        model = Comment
+        fields = "__all__"
+
+
+class CommentSerialiser(ModelSerializer):
 
     class Meta:
         model = Comment

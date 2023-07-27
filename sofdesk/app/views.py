@@ -4,13 +4,20 @@ from rest_framework.viewsets import ModelViewSet
 from authenticate.models import User
 from app.models import (Project, Contributor,
                         Issue, Comment)
-from app.serializers import (ProjectSerialiser, ContributorSerialiser,
-                             IssueSerialiser, CommentSerialiser)
+from app.serializers import (ProjectSerialiser, ProjectJsonSerialiser,
+                             ContributorSerialiser, ContributorJsonSerialiser,
+                             IssueSerialiser, IssueJsonSerialiser,
+                             CommentSerialiser, CommentJsonSerialiser)
 
 
 class ProjectViewset(ModelViewSet):
 
-    serializer_class = ProjectSerialiser
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            serializer_class = ProjectJsonSerialiser
+            return serializer_class
+        serializer_class = ProjectSerialiser
+        return serializer_class
 
     def get_queryset(self):
         return Project.objects.all()
@@ -25,7 +32,12 @@ class ProjectViewset(ModelViewSet):
 
 class ContributorViewset(ModelViewSet):
 
-    serializer_class = ContributorSerialiser
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            serializer_class = ContributorJsonSerialiser
+            return serializer_class
+        serializer_class = ContributorSerialiser
+        return serializer_class
 
     def get_queryset(self):
         return Contributor.objects.all()
@@ -33,7 +45,12 @@ class ContributorViewset(ModelViewSet):
 
 class IssuetViewset(ModelViewSet):
 
-    serializer_class = IssueSerialiser
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            serializer_class = IssueJsonSerialiser
+            return serializer_class
+        serializer_class = IssueSerialiser
+        return serializer_class
 
     def get_queryset(self):
         return Issue.objects.all()
@@ -41,7 +58,12 @@ class IssuetViewset(ModelViewSet):
 
 class CommentViewset(ModelViewSet):
 
-    serializer_class = CommentSerialiser
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            serializer_class = CommentJsonSerialiser
+            return serializer_class
+        serializer_class = CommentSerialiser
+        return serializer_class
 
     def get_queryset(self):
         return Comment.objects.all()
