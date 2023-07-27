@@ -6,6 +6,7 @@ from authenticate.models import User
 
 
 class Project(models.Model):
+
     TYPE_CHOICES = (
         ("back-end", "back-end"), ("front-end", "front-end"),
         ("iOS", "iOS"), ("Android", "Android")
