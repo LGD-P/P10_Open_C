@@ -5,11 +5,25 @@ from app.models import Project, Contributor, Issue, Comment
 
 
 class ProjectSerialiser(ModelSerializer):
-    # method creat pour le contributeur à mettre ici !!
-    # depth
     class Meta:
         model = Project
         fields = "__all__"
+
+    def create(self, validated_data):
+        """Creat automaticly a Contributor
+        when a new project is created
+
+        Args:
+            validated_data (_type_): Project Instance
+
+        Returns:
+            Instance: Project instance
+        """
+        instance = super().create(validated_data)
+        contributor = Contributor(
+            author=instance.author, project=instance)
+        contributor.save()
+        return instance
 
 
 class ContributorSerialiser(ModelSerializer):

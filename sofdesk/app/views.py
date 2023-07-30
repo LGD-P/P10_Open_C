@@ -1,7 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 
 
-from authenticate.models import User
 from app.models import (Project, Contributor,
                         Issue, Comment)
 from app.serializers import (ProjectSerialiser, ContributorSerialiser,
@@ -24,23 +23,6 @@ class ProjectViewset(ModelViewSet):
             _type_:all Project
         """
         return Project.objects.all()
-
-    def perform_create(self, serializer_class):
-        """Use to creat Project and automatically
-        creat Contributor linked to it.
-
-        Args:
-            serializer_class (_type_): ProjectSerializer
-
-        """
-        # Save Project instance first
-        # get User et Project to creat & save a Contributor
-
-        instance = serializer_class.save()
-        author = User.objects.get(pk=instance.author_id)
-        project_id = Project.objects.get(pk=instance.id)
-        contributor = Contributor(author=author, project=project_id)
-        contributor.save()
 
 
 class ContributorViewset(ModelViewSet):

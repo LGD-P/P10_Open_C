@@ -5,7 +5,6 @@ from authenticate.models import User
 
 
 class UserSerialiser(ModelSerializer):
-    # method creat et setpassword
 
     error_msg = "Les utilisateurs doivent avoir plus de 15ans pour créer un compte."
 
@@ -20,5 +19,12 @@ class UserSerialiser(ModelSerializer):
         """
         if data['age'] <= 15:
             raise ValidationError(
-                "Pour créer un compte il faut avoir plus de 15 ans")
+                self.error_msg)
         return data
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = User.objects.create(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
