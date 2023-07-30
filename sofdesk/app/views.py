@@ -4,10 +4,8 @@ from rest_framework.viewsets import ModelViewSet
 from authenticate.models import User
 from app.models import (Project, Contributor,
                         Issue, Comment)
-from app.serializers import (ProjectSerialiser, ProjectJsonSerialiser,
-                             ContributorSerialiser, ContributorJsonSerialiser,
-                             IssueSerialiser, IssueJsonSerialiser,
-                             CommentSerialiser, CommentJsonSerialiser)
+from app.serializers import (ProjectSerialiser, ContributorSerialiser,
+                             IssueSerialiser, CommentSerialiser)
 
 
 class ProjectViewset(ModelViewSet):
@@ -17,20 +15,7 @@ class ProjectViewset(ModelViewSet):
         ModelViewSet (_type_): base viewset class to manage C.R.U.D
     """
 
-    def get_serializer_class(self):
-        """Select appropriate Serializer to Read or Other operation:
-        C.U.D
-
-        Returns:
-            _type_: The serializer class to be used.
-        """
-        # If action is READ
-
-        if self.action == 'list' or self.action == 'retrieve':
-            serializer_class = ProjectJsonSerialiser
-            return serializer_class
-        serializer_class = ProjectSerialiser
-        return serializer_class
+    serializer_class = ProjectSerialiser
 
     def get_queryset(self):
         """Simple query_set to get all Project
@@ -65,20 +50,7 @@ class ContributorViewset(ModelViewSet):
         ModelViewSet (_type_): base viewset class to manage C.R.U.D
     """
 
-    def get_serializer_class(self):
-        """Select appropriate Serializer to Read or Other operation:
-        C.U.D
-
-        Returns:
-            _type_: The serializer class to be used"""
-
-        # If action is READ
-
-        if self.action == 'list' or self.action == 'retrieve':
-            serializer_class = ContributorJsonSerialiser
-            return serializer_class
-        serializer_class = ContributorSerialiser
-        return serializer_class
+    serializer_class = ContributorSerialiser
 
     def get_queryset(self):
         """Simple query_set to get all Contributor
@@ -96,20 +68,7 @@ class IssuetViewset(ModelViewSet):
         ModelViewSet (_type_): base viewset class to manage C.R.U.D
     """
 
-    def get_serializer_class(self):
-        """Select appropriate Serializer to Read or Other operations:
-        C.U.D
-
-        Returns:
-            _type_: The serializer class to be used"""
-
-        # If action is READ
-
-        if self.action == 'list' or self.action == 'retrieve':
-            serializer_class = IssueJsonSerialiser
-            return serializer_class
-        serializer_class = IssueSerialiser
-        return serializer_class
+    serializer_class = IssueSerialiser
 
     def get_queryset(self):
         """Simple query_set to get all Issue
@@ -127,20 +86,7 @@ class CommentViewset(ModelViewSet):
         ModelViewSet (_type_): base viewset class to manage C.R.U.D
     """
 
-    def get_serializer_class(self):
-        """Select appropriate Serializer to Read or Other operations:
-        C.U.D
-
-        Returns:
-            _type_: The serializer class to be used"""
-
-        # If action is READ
-
-        if self.action == 'list' or self.action == 'retrieve':
-            serializer_class = CommentJsonSerialiser
-            return serializer_class
-        serializer_class = CommentSerialiser
-        return serializer_class
+    serializer_class = CommentSerialiser
 
     def get_queryset(self):
         """Simple query_set to get all Issue
