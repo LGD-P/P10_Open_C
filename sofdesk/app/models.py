@@ -60,10 +60,10 @@ class Issue(models.Model):
 
 
 class Comment(models.Model):
+    id = models.BigAutoField(primary_key=True)
     author = models.ForeignKey(to=User, on_delete=models.CASCADE)
     description = models.TextField(max_length=2048, blank=True)
-    uuid = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     created_time = models.DateTimeField(auto_now_add=True)
     issue = models.ForeignKey(
         to=Issue, on_delete=models.CASCADE, related_name='comment',)
