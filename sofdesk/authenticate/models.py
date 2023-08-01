@@ -8,6 +8,8 @@ class User(AbstractUser):
     can_be_shared = models.BooleanField(default=False)
     created_time = models.DateTimeField(auto_now_add=True)
     age = models.PositiveBigIntegerField(blank=False, null=False, default=15)
+    username = models.CharField(
+        max_length=50, blank=False, null=False, unique=True)
 
     def __str__(self) -> str:
         return self.username
