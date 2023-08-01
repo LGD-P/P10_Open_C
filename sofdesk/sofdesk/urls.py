@@ -1,28 +1,13 @@
-"""
-URL configuration for sofdesk project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework_nested import routers
 
-from rest_framework import routers
 from authenticate.views import UserViewset
 from app.views import (ProjectViewset, ContributorViewset,
                        IssuetViewset, CommentViewset)
 
-router = routers.SimpleRouter()
+router = routers.DefaultRouter()
 
 router.register('user', UserViewset, basename='user')
 router.register('project', ProjectViewset, basename='project')
@@ -31,10 +16,32 @@ router.register('issue', IssuetViewset, basename='issue')
 router.register('comment', CommentViewset, basename='comment')
 
 
+# Router pour les Contirbuteur !!!! problème affiche tous les contributeur y compris ceux d'autre projets.
+contributor_nested_router = routers.NestedDefaultRouter(
+    router, 'project', lookup='project')
+contributor_nested_router.register(
+    'contributor', ContributorViewset, basename="contributor")
+
+# Router pour les Issues remontant vers les Project
+issue_nested_router = routers.NestedDefaultRouter(
+    router, 'project', lookup='project')
+issue_nested_router.register('issue', IssuetViewset, basename='issue')
+
+# Router pour les Commentaires remontant vers les Issues
+comment_nested_router = routers.NestedDefaultRouter(
+    issue_nested_router, 'issue', lookup='issue')
+comment_nested_router.register('comment', CommentViewset, basename='comment')
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
     path('api-auth/', include('rest_framework.urls')),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+
+
+    path('api/', include(contributor_nested_router.urls)),
+    path('api/', include(issue_nested_router.urls)),
+    path('api/', include(comment_nested_router.urls)),
 
 ]
