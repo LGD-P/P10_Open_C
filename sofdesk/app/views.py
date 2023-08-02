@@ -71,9 +71,17 @@ class CommentViewset(ModelViewSet):
     serializer_class = CommentSerialiser
 
     def get_queryset(self):
-        """Simple query_set to get all Issue
+        """Returns all comments"""
 
-        Returns:
-            _type_:all Issue
-        """
-        return Comment.objects.all()
+        # check if the detail view and Issue id is in url
+        if 'pk' in self.kwargs and 'issue' in self.kwargs.get('base_name'):
+            issue_id = self.kwargs['pk']
+            queryset = (
+                Comment.objects.filter(issue=issue_id)
+                .select_related('issue')
+                .prefetch_related('attachments')
+            )
+        else:
+            queryset = Comment.objects.all()
+
+        return queryset
