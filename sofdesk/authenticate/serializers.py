@@ -10,8 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(
         style={'input_type': 'password'})
-    password2 = serializers.CharField(
-        write_only=True, style={'input_type': 'password'})
+
     date_of_birth = serializers.DateField(write_only=True,)
 
     class Meta:
@@ -19,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
 
         fields = ['user_id', 'username', 'can_be_shared',
-                  'can_be_contacted', 'password', 'password2', 'date_of_birth']
+                  'can_be_contacted', 'password', 'date_of_birth']
 
         extra_kwargs = {
 
@@ -31,13 +30,6 @@ class UserSerializer(serializers.ModelSerializer):
     def validate_password(self, value):
         validate_password(value)
         return value
-
-    def validate(self, data):
-        if data['password'] != data.pop('password2'):
-            raise serializers.ValidationError(
-                "Les mots de passes ne sont pas identiques")
-
-        return data
 
     def validate_date_of_birth(self, value):
         """
@@ -52,8 +44,7 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        """Remove date_of_birth from validated_date 
-        before user_creation
+        """Remove date_of_birth from validated_data before user_creation
         """
         password = validated_data.pop('password')
         test_date = validated_data.pop('date_of_birth', None)

@@ -39,6 +39,23 @@ class IssueSerialiser(ModelSerializer):
         model = Issue
         fields = "__all__"
 
+    def create(self, validated_data):
+        """Creat automaticly a Contributor
+        when a new project is created
+
+        Args:
+            validated_data (_type_): Project Instance
+
+        Returns:
+            Instance: Project instance
+        """
+        instance = super().create(validated_data)
+        project = validated_data.get('project')
+        contributor = Contributor(
+            author=instance.assign_to, project=project)
+        contributor.save()
+        return instance
+
 
 class CommentSerialiser(ModelSerializer):
 
