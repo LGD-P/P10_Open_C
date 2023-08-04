@@ -7,7 +7,6 @@ from app.models import Project, Contributor, Issue, Comment
 class ProjectSerialiser(ModelSerializer):
     class Meta:
         model = Project
-        fields = "__all__"
 
     def create(self, validated_data):
         """Creat automaticly a Contributor

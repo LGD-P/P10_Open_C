@@ -24,7 +24,7 @@ class ProjectViewset(ModelViewSet):
         Returns:
             _type_:all Project
         """
-        return Project.objects.filter(author=self.request.user)
+        return Project.objects.select_related('author').filter(author=self.request.user)
 
 
 class ContributorViewset(ModelViewSet):
