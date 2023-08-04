@@ -5,6 +5,7 @@ from app.models import (Project, Contributor,
                         Issue, Comment)
 from app.serializers import (ProjectSerialiser, ContributorSerialiser,
                              IssueSerialiser, CommentSerialiser)
+from app.permissions import (ProjectPermission)
 
 
 class ProjectViewset(ModelViewSet):
@@ -15,6 +16,7 @@ class ProjectViewset(ModelViewSet):
     """
 
     serializer_class = ProjectSerialiser
+    permission_classes = [ProjectPermission]
 
     def get_queryset(self):
         """Simple query_set to get all Project
@@ -22,7 +24,7 @@ class ProjectViewset(ModelViewSet):
         Returns:
             _type_:all Project
         """
-        return Project.objects.all()
+        return Project.objects.filter(author=self.request.user)
 
 
 class ContributorViewset(ModelViewSet):
@@ -71,17 +73,9 @@ class CommentViewset(ModelViewSet):
     serializer_class = CommentSerialiser
 
     def get_queryset(self):
-        """Returns all comments"""
+        """Simple query_set to get all Issue
 
-        # check if the detail view and Issue id is in url
-        if 'pk' in self.kwargs and 'issue' in self.kwargs.get('base_name'):
-            issue_id = self.kwargs['pk']
-            queryset = (
-                Comment.objects.filter(issue=issue_id)
-                .select_related('issue')
-                .prefetch_related('attachments')
-            )
-        else:
-            queryset = Comment.objects.all()
-
-        return queryset
+        Returns:
+            _type_:all Issue
+        """
+        return Comment.objects.all()

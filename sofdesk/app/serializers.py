@@ -37,7 +37,8 @@ class IssueSerialiser(ModelSerializer):
 
     class Meta:
         model = Issue
-        fields = "__all__"
+        fields = ['author', 'name', 'description',
+                  'priority', 'tag', 'status', 'project']
 
     def create(self, validated_data):
         """Creat automaticly a Contributor
