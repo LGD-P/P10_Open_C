@@ -3,7 +3,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from app.models import (Project, Contributor,
                         Issue, Comment)
-from app.serializers import (ProjectSerialiser, ContributorSerialiser,
+from app.serializers import (ProjectSerializer, ContributorSerialiser,
                              IssueSerialiser, CommentSerialiser)
 from app.permissions import (ProjectPermission)
 
@@ -15,7 +15,7 @@ class ProjectViewset(ModelViewSet):
         ModelViewSet (_type_): base viewset class to manage C.R.U.D
     """
 
-    serializer_class = ProjectSerialiser
+    serializer_class = ProjectSerializer
     permission_classes = [ProjectPermission]
 
     def get_queryset(self):

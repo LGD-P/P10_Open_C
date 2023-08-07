@@ -1,27 +1,21 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, CurrentUserDefault
 
 
 from app.models import Project, Contributor, Issue, Comment
 
 
-class ProjectSerialiser(ModelSerializer):
+class ProjectSerializer(ModelSerializer):
+    author = CurrentUserDefault
+
     class Meta:
         model = Project
+        fields = "__all__"
+        read_only_fields = ["author"]
 
-    def create(self, validated_data):
-        """Creat automaticly a Contributor
-        when a new project is created
-
-        Args:
-            validated_data (_type_): Project Instance
-
-        Returns:
-            Instance: Project instance
-        """
-        instance = super().create(validated_data)
-        contributor = Contributor(
-            author=instance.author, project=instance)
-        contributor.save()
+    def save(self, **kwargs):
+        author = self.context['request'].user
+        instance = super().save(author=author, **kwargs)
+        Contributor.objects.create(author=author, project=instance)
         return instance
 
 

@@ -13,7 +13,7 @@ class Project(models.Model):
     )
     author = models.ForeignKey(to=User, on_delete=models.CASCADE)
     name = models.CharField(max_length=128, null=False,
-                            blank=True)  # Rajouter unique = True
+                            blank=True, unique=True)
     description = models.TextField(max_length=2048, blank=True)
     type = models.CharField(choices=TYPE_CHOICES, max_length=15, blank=True,)
     created_time: models.DateTimeField(auto_now_add=True)
