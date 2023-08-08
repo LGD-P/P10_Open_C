@@ -3,9 +3,10 @@ from rest_framework.viewsets import ModelViewSet
 from django.db.models import Q
 from app.models import (Project, Contributor,
                         Issue, Comment)
-from app.serializers import (ProjectSerializer, ContributorSerialiser,
+from app.serializers import (ProjectSerializer, ContributorSerializer,
                              IssueSerializer, CommentSerialiser)
-from app.permissions import (ProjectPermission)
+from app.permissions import (ProjectPermission, ContributorPermission,
+                             IssuePermission, CommentPermission)
 
 
 class ProjectViewset(ModelViewSet):
@@ -34,7 +35,8 @@ class ContributorViewset(ModelViewSet):
         ModelViewSet (_type_): base viewset class to manage C.R.U.D
     """
 
-    serializer_class = ContributorSerialiser
+    serializer_class = ContributorSerializer
+    permission_classes = [ContributorPermission]
 
     def get_queryset(self):
         """Filter queryset to only show contributors for the project of the logged in user"""
@@ -52,10 +54,10 @@ class ContributorViewset(ModelViewSet):
             'author').prefetch_related('project')
         """
 
-        test = Contributor.objects.filter(
+        contributors = Contributor.objects.filter(
             Q(author=self.request.user) | Q(project__author=self.request.user))
 
-        return test
+        return contributors
 
 
 class IssuetViewset(ModelViewSet):
@@ -66,6 +68,7 @@ class IssuetViewset(ModelViewSet):
     """
 
     serializer_class = IssueSerializer
+    permission_classes = [IssuePermission]
 
     def get_queryset(self):
         """Simple query_set to get all Issue
@@ -74,8 +77,7 @@ class IssuetViewset(ModelViewSet):
             _type_:all Issue
         """
 
-        return Issue.objects.filter(
-            Q(author=self.request.user) | Q(assign_to=self.request.user))
+        return Issue.objects.filter(Q(author=self.request.user) | Q(assign_to=self.request.user))
 
 
 class CommentViewset(ModelViewSet):
@@ -86,6 +88,7 @@ class CommentViewset(ModelViewSet):
     """
 
     serializer_class = CommentSerialiser
+    permission_classes = [CommentPermission]
 
     def get_queryset(self):
         """Simple query_set to get all Issue
@@ -94,5 +97,5 @@ class CommentViewset(ModelViewSet):
             _type_:all Issue
         """
         return Comment.objects.filter(
-            Q(author=self.request.user) | Q(issue__assign_to=self.request.user)
-        ).values('author', 'issue__assign_to')
+            Q(author=self.request.user) | Q(issue__assign_to=self.request.user))
+        # .values('author', 'issue__assign_to')

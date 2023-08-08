@@ -32,7 +32,7 @@ class ProjectSerializer(ModelSerializer):
         return instance
 
 
-class ContributorSerialiser(ModelSerializer):
+class ContributorSerializer(ModelSerializer):
 
     class Meta:
         model = Contributor
