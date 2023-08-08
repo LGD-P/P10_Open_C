@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 from app.models import (Project, Contributor,
                         Issue, Comment)
 from app.serializers import (ProjectSerializer, ContributorSerialiser,
-                             IssueSerialiser, CommentSerialiser)
+                             IssueSerializer, CommentSerialiser)
 from app.permissions import (ProjectPermission)
 
 
@@ -37,12 +37,20 @@ class ContributorViewset(ModelViewSet):
     serializer_class = ContributorSerialiser
 
     def get_queryset(self):
-        """Simple query_set to get all Contributor
+        """Filter queryset to only show contributors for the project of the logged in user"""
 
-        Returns:
-            _type_:all Contributor
-        """
-        return Contributor.objects.all()
+        # get the logged in user
+        user = self.request.user
+
+        # get all projects IDs for logged in user
+        project_ids = Contributor.objects.filter(
+            author=user).values_list('project_id', flat=True)
+
+        # Filter the contributors to only include contributors with matching project IDs
+        queryset = Contributor.objects.filter(project_id__in=project_ids).select_related(
+            'author').prefetch_related('project')
+
+        return queryset
 
 
 class IssuetViewset(ModelViewSet):
@@ -52,7 +60,7 @@ class IssuetViewset(ModelViewSet):
         ModelViewSet (_type_): base viewset class to manage C.R.U.D
     """
 
-    serializer_class = IssueSerialiser
+    serializer_class = IssueSerializer
 
     def get_queryset(self):
         """Simple query_set to get all Issue
@@ -60,7 +68,7 @@ class IssuetViewset(ModelViewSet):
         Returns:
             _type_:all Issue
         """
-        return Issue.objects.all()
+        return Issue.objects.select_related('author').filter(author=self.request.user)
 
 
 class CommentViewset(ModelViewSet):
