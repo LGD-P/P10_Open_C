@@ -73,7 +73,6 @@ class IssuetViewset(ModelViewSet):
         Returns:
             _type_:all Issue
         """
-        # Issue.objects.select_related('author').filter(author=self.request.user)
 
         return Issue.objects.filter(
             Q(author=self.request.user) | Q(assign_to=self.request.user))
@@ -96,4 +95,4 @@ class CommentViewset(ModelViewSet):
         """
         return Comment.objects.filter(
             Q(author=self.request.user) | Q(issue__assign_to=self.request.user)
-        )
+        ).values('author', 'issue__assign_to')

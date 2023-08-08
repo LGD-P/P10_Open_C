@@ -1,6 +1,7 @@
 from rest_framework.serializers import (
     ModelSerializer, CurrentUserDefault)
 
+from django.db.models import Q
 
 from app.models import Project, Contributor, Issue, Comment
 
@@ -58,7 +59,7 @@ class IssueSerializer(ModelSerializer):
         # Limite limite les choix de project en fonction d'author et contributor
         if request and request.user.is_authenticated:
             self.fields['project'].queryset = Project.objects.filter(
-                contributor__author=request.user)
+                Q(contributor__author=request.user) | Q(author=request.user))
             self.fields['author'].queryset = self.context['request'].user
 
     def create(self, validated_data):
@@ -97,3 +98,10 @@ class CommentSerialiser(ModelSerializer):
             self.fields['author'].queryset = self.context['request'].user
             self.fields['issue'].queryset = Issue.objects.filter(
                 assign_to=request.user)
+
+    def create(self, validated_data):
+
+        validated_data['author'] = self.context['request'].user
+        instance = super().create(validated_data)
+
+        return instance
