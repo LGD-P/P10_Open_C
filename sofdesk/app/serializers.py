@@ -63,7 +63,7 @@ class IssueSerializer(ModelSerializer):
             self.fields['author'].queryset = self.context['request'].user
 
     def create(self, validated_data):
-        # Pas sur que ce soit utile à tester
+
         author = self.context['request'].user
         project = validated_data['project']
 

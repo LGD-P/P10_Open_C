@@ -97,5 +97,6 @@ class CommentViewset(ModelViewSet):
             _type_:all Issue
         """
         return Comment.objects.filter(
-            Q(author=self.request.user) | Q(issue__assign_to=self.request.user))
-        # .values('author', 'issue__assign_to')
+            Q(author=self.request.user) | Q(
+                issue__assign_to=self.request.user) | Q(
+                issue__author=self.request.user))
