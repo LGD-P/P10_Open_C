@@ -16,7 +16,7 @@ router.register('issue', IssuetViewset, basename='issue')
 router.register('comment', CommentViewset, basename='comment')
 
 
-# Router pour les Contirbuteur !!!! problème affiche tous les contributeur y compris ceux d'autre projets.
+# Router pour les Contirbuteur
 contributor_nested_router = routers.NestedDefaultRouter(
     router, 'project', lookup='project')
 contributor_nested_router.register(

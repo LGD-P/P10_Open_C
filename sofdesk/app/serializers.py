@@ -52,10 +52,10 @@ class IssueSerializer(ModelSerializer):
         """
         super().__init__(*args, **kwargs)
 
-        # Retrieve the request from the serializer context
+        # récupérer les données du sérializer
         request = self.context.get('request')
 
-        # Limit the available choices for the project field based on related projects
+        # Limite limite les choix de project en fonction d'author et contributor
         if request and request.user.is_authenticated:
             self.fields['project'].queryset = Project.objects.filter(
                 contributor__author=request.user)
@@ -70,7 +70,7 @@ class IssueSerializer(ModelSerializer):
 
         instance = super().create(validated_data)
 
-        # Check if a Contributor instance already exists for the author and project
+        # Vérifie si le contributor n'existe pas déjà auquel cas ne le crée pas
         if Contributor.objects.filter(author=instance.assign_to, project=project).exists():
             pass
         else:
@@ -86,3 +86,14 @@ class CommentSerialiser(ModelSerializer):
     class Meta:
         model = Comment
         fields = "__all__"
+        read_only_fields = ['author']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        request = self.context.get('request')
+
+        if request and request.user.is_authenticated:
+            self.fields['author'].queryset = self.context['request'].user
+            self.fields['issue'].queryset = Issue.objects.filter(
+                assign_to=request.user)

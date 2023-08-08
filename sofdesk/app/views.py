@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 
-
+from django.db.models import Q
 from app.models import (Project, Contributor,
                         Issue, Comment)
 from app.serializers import (ProjectSerializer, ContributorSerialiser,
@@ -19,12 +19,12 @@ class ProjectViewset(ModelViewSet):
     permission_classes = [ProjectPermission]
 
     def get_queryset(self):
-        """Simple query_set to get all Project
+        """Filter queryset to only show contributors for the project of the logged in user"""
 
-        Returns:
-            _type_:all Project
-        """
-        return Project.objects.select_related('author').filter(author=self.request.user)
+        projects = Project.objects.filter(
+            Q(author=self.request.user) | Q(contributor__author=self.request.user))
+
+        return projects
 
 
 class ContributorViewset(ModelViewSet):
@@ -39,6 +39,7 @@ class ContributorViewset(ModelViewSet):
     def get_queryset(self):
         """Filter queryset to only show contributors for the project of the logged in user"""
 
+        """
         # get the logged in user
         user = self.request.user
 
@@ -49,8 +50,12 @@ class ContributorViewset(ModelViewSet):
         # Filter the contributors to only include contributors with matching project IDs
         queryset = Contributor.objects.filter(project_id__in=project_ids).select_related(
             'author').prefetch_related('project')
+        """
 
-        return queryset
+        test = Contributor.objects.filter(
+            Q(author=self.request.user) | Q(project__author=self.request.user))
+
+        return test
 
 
 class IssuetViewset(ModelViewSet):
@@ -68,7 +73,10 @@ class IssuetViewset(ModelViewSet):
         Returns:
             _type_:all Issue
         """
-        return Issue.objects.select_related('author').filter(author=self.request.user)
+        # Issue.objects.select_related('author').filter(author=self.request.user)
+
+        return Issue.objects.filter(
+            Q(author=self.request.user) | Q(assign_to=self.request.user))
 
 
 class CommentViewset(ModelViewSet):
@@ -86,4 +94,6 @@ class CommentViewset(ModelViewSet):
         Returns:
             _type_:all Issue
         """
-        return Comment.objects.all()
+        return Comment.objects.filter(
+            Q(author=self.request.user) | Q(issue__assign_to=self.request.user)
+        )
