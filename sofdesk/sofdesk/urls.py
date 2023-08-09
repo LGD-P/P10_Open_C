@@ -2,6 +2,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_nested import routers
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from authenticate.views import UserViewset
 from app.views import (ProjectViewset, ContributorViewset,
@@ -43,5 +44,8 @@ urlpatterns = [
     path('api/', include(contributor_nested_router.urls)),
     path('api/', include(issue_nested_router.urls)),
     path('api/', include(comment_nested_router.urls)),
+
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
 ]
