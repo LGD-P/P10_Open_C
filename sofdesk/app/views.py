@@ -8,8 +8,7 @@ from app.models import (Project, Contributor,
                         Issue, Comment)
 from app.serializers import (ProjectSerializer, ContributorSerializer,
                              IssueSerializer, CommentSerialiser)
-from app.permissions import (ProjectPermission, ContributorPermission,
-                             IssuePermission, CommentPermission, UnlimitedAcces)
+from app.permissions import (IsContributorPermission)
 
 
 class ProjectViewset(ModelViewSet):
@@ -21,15 +20,14 @@ class ProjectViewset(ModelViewSet):
     """
 
     serializer_class = ProjectSerializer
-    permission_classes = [ProjectPermission, IsAuthenticated]
+    permission_classes = [IsContributorPermission, IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
         """Filter queryset to only show contributors for the project of the logged in user"""
 
-        projects = Project.objects.filter(author=self.request.user)
-        # | Q(contributor__author=self.request.user))
-
+        projects = Project.objects.filter(
+            contributor__author=self.request.user).prefetch_related('contributor_set')
         return projects
 
 
@@ -41,7 +39,7 @@ class ContributorViewset(ModelViewSet):
     """
 
     serializer_class = ContributorSerializer
-    permission_classes = [ContributorPermission, IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
@@ -73,7 +71,7 @@ class IssuetViewset(ModelViewSet):
     """
 
     serializer_class = IssueSerializer
-    permission_classes = [IssuePermission, IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
@@ -94,7 +92,7 @@ class CommentViewset(ModelViewSet):
     """
 
     serializer_class = CommentSerialiser
-    permission_classes = [CommentPermission, IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):

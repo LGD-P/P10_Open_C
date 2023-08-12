@@ -12,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 class UserViewset(ModelViewSet):
 
     serializer_class = UserSerializer
-    permission_classes = [UserModifyPermission]
+    permission_classes = [UserModifyPermission, IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
