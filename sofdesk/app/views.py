@@ -8,7 +8,7 @@ from app.models import (Project, Contributor,
                         Issue, Comment)
 from app.serializers import (ProjectSerializer, ContributorSerializer,
                              IssueSerializer, CommentSerialiser)
-from app.permissions import (IsContributorPermission)
+from app.permissions import (IsContributorPermission, IsAuthorPermissions)
 
 
 class ProjectViewset(ModelViewSet):
@@ -27,7 +27,7 @@ class ProjectViewset(ModelViewSet):
         """Filter queryset to only show contributors for the project of the logged in user"""
         # projects = Project.objects.filter(contributor__author=self.request.user).prefetch_related('contributor_set')
         # projects = Project.objects.all()
-        projects = Project.objects.filter(
+        projects = projects = Project.objects.filter(
             contributor__author=self.request.user).prefetch_related('contributor_set')
         return projects
 
@@ -40,26 +40,16 @@ class ContributorViewset(ModelViewSet):
     """
 
     serializer_class = ContributorSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAuthorPermissions]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
         """Filter queryset to only show contributors for the project of the logged in user"""
 
-        # get the logged in user
-        user = self.request.user
-
-        # get all projects IDs for logged in user
-        project_ids = Contributor.objects.filter(
-            author=user).values_list('project_id', flat=True)
-
-        # Filter the contributors to only include contributors with matching project IDs
-        queryset = Contributor.objects.filter(project_id__in=project_ids).select_related(
-            'author').prefetch_related('project')
-
         # contributors = Contributor.objects.all()
-        contributors = Contributor.objects.filter(
-            Q(author=self.request.user) | Q(project__author=self.request.user))
+        # contributors = Contributor.objects.select_related('author').filter(Q(author=self.request.user))
+        contributors = Contributor.objects.select_related(
+            'author').filter(Q(author=self.request.user))
 
         return contributors
 
