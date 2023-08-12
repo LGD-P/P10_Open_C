@@ -1,4 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 
 from django.db.models import Q
 from app.models import (Project, Contributor,
@@ -6,10 +9,11 @@ from app.models import (Project, Contributor,
 from app.serializers import (ProjectSerializer, ContributorSerializer,
                              IssueSerializer, CommentSerialiser)
 from app.permissions import (ProjectPermission, ContributorPermission,
-                             IssuePermission, CommentPermission)
+                             IssuePermission, CommentPermission, UnlimitedAcces)
 
 
 class ProjectViewset(ModelViewSet):
+
     """Manage CRUD operations on Project object
 
     Args:
@@ -17,13 +21,14 @@ class ProjectViewset(ModelViewSet):
     """
 
     serializer_class = ProjectSerializer
-    permission_classes = [ProjectPermission]
+    permission_classes = [UnlimitedAcces, IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
         """Filter queryset to only show contributors for the project of the logged in user"""
 
-        projects = Project.objects.filter(
-            Q(author=self.request.user) | Q(contributor__author=self.request.user))
+        projects = Project.objects.filter(author=self.request.user)
+        # | Q(contributor__author=self.request.user))
 
         return projects
 
@@ -36,7 +41,8 @@ class ContributorViewset(ModelViewSet):
     """
 
     serializer_class = ContributorSerializer
-    permission_classes = [ContributorPermission]
+    permission_classes = [ContributorPermission, IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
         """Filter queryset to only show contributors for the project of the logged in user"""
@@ -53,9 +59,8 @@ class ContributorViewset(ModelViewSet):
         queryset = Contributor.objects.filter(project_id__in=project_ids).select_related(
             'author').prefetch_related('project')
         """
-
-        contributors = Contributor.objects.filter(
-            Q(author=self.request.user) | Q(project__author=self.request.user))
+        contributors = Contributor.objects.all()
+        # contributors = Contributor.objects.filter(Q(author=self.request.user) | Q(project__author=self.request.user))
 
         return contributors
 
@@ -68,7 +73,8 @@ class IssuetViewset(ModelViewSet):
     """
 
     serializer_class = IssueSerializer
-    permission_classes = [IssuePermission]
+    permission_classes = [IssuePermission, IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
         """Simple query_set to get all Issue
@@ -88,7 +94,8 @@ class CommentViewset(ModelViewSet):
     """
 
     serializer_class = CommentSerialiser
-    permission_classes = [CommentPermission]
+    permission_classes = [CommentPermission, IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
         """Simple query_set to get all Issue
