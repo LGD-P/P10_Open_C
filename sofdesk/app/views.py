@@ -25,7 +25,8 @@ class ProjectViewset(ModelViewSet):
 
     def get_queryset(self):
         """Filter queryset to only show contributors for the project of the logged in user"""
-
+        # projects = Project.objects.filter(contributor__author=self.request.user).prefetch_related('contributor_set')
+        # projects = Project.objects.all()
         projects = Project.objects.filter(
             contributor__author=self.request.user).prefetch_related('contributor_set')
         return projects

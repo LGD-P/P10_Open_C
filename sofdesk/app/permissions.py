@@ -1,5 +1,7 @@
 from rest_framework import permissions
 
+from app.models import Project, Contributor
+
 
 class IsContributorPermission(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -13,4 +15,4 @@ class IsContributorPermission(permissions.BasePermission):
 
         # Autorise SAFE_METHODS if user is contributor to project
         if request.method in permissions.SAFE_METHODS:
-            return request.user.is_authenticated
+            return Contributor.objects.filter(project=obj, author=request.user).exists()

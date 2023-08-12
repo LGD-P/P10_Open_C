@@ -7,6 +7,6 @@ from .models import User
 class UserAdmin(admin.ModelAdmin):
     list_display = [
         "username", "can_be_contacted", "can_be_shared",
-        "user_id"
+        "user_id",
     ]
     list_filter = list_display
