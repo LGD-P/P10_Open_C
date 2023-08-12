@@ -21,7 +21,7 @@ class ProjectViewset(ModelViewSet):
     """
 
     serializer_class = ProjectSerializer
-    permission_classes = [UnlimitedAcces, IsAuthenticated]
+    permission_classes = [ProjectPermission, IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
@@ -47,7 +47,6 @@ class ContributorViewset(ModelViewSet):
     def get_queryset(self):
         """Filter queryset to only show contributors for the project of the logged in user"""
 
-        """
         # get the logged in user
         user = self.request.user
 
@@ -58,9 +57,10 @@ class ContributorViewset(ModelViewSet):
         # Filter the contributors to only include contributors with matching project IDs
         queryset = Contributor.objects.filter(project_id__in=project_ids).select_related(
             'author').prefetch_related('project')
-        """
-        contributors = Contributor.objects.all()
-        # contributors = Contributor.objects.filter(Q(author=self.request.user) | Q(project__author=self.request.user))
+
+        # contributors = Contributor.objects.all()
+        contributors = Contributor.objects.filter(
+            Q(author=self.request.user) | Q(project__author=self.request.user))
 
         return contributors
 

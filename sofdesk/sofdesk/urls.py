@@ -41,7 +41,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include(router.urls)),
 
-
     path('api/', include(contributor_nested_router.urls)),
     path('api/', include(issue_nested_router.urls)),
     path('api/', include(comment_nested_router.urls)),

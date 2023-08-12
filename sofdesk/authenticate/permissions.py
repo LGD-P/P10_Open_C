@@ -8,5 +8,4 @@ class UserModifyPermission(permissions.BasePermission):
             return True
 
     def has_object_permission(self, request, view, obj):
-        if obj.user_id == request.user:
-            return True
+        return obj.user_id == request.user.user_id
