@@ -46,22 +46,6 @@ class IssueSerializer(ModelSerializer):
         fields = "__all__"
         read_only_fields = ['author']
 
-    def __init__(self, *args, **kwargs):
-        """
-        Override the serializer initialization to limit the available choices
-        for related fields based on the logged in user.
-        """
-        super().__init__(*args, **kwargs)
-
-        # récupérer les données du sérializer
-        request = self.context.get('request')
-
-        # Limite limite les choix de project en fonction d'author et contributor
-        if request and request.user.is_authenticated:
-            self.fields['project'].queryset = Project.objects.filter(
-                Q(contributor__author=request.user) | Q(author=request.user))
-            self.fields['author'].queryset = self.context['request'].user
-
     def create(self, validated_data):
 
         author = self.context['request'].user
