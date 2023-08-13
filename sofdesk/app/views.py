@@ -9,7 +9,7 @@ from app.models import (Project, Contributor,
 from app.serializers import (ProjectSerializer, ContributorSerializer,
                              IssueSerializer, CommentSerialiser)
 from app.permissions import (
-    IsContributorPermission, IsAuthorPermissions, IssuePermission)
+    IsContributorPermission, IsAuthorPermissions, IssuePermission, CommentPermission)
 
 
 class ProjectViewset(ModelViewSet):
@@ -73,7 +73,7 @@ class IssuetViewset(ModelViewSet):
             _type_:all Issue
         """
         # issues = Issue.objects.all()
-        #
+
         issues = Issue.objects.filter(
             Q(author=self.request.user) | Q(assign_to=self.request.user))
 
@@ -88,7 +88,7 @@ class CommentViewset(ModelViewSet):
     """
 
     serializer_class = CommentSerialiser
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, CommentPermission]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
@@ -97,7 +97,8 @@ class CommentViewset(ModelViewSet):
         Returns:
             _type_:all Issue
         """
-        return Comment.objects.filter(
-            Q(author=self.request.user) | Q(
-                issue__assign_to=self.request.user) | Q(
-                issue__author=self.request.user))
+
+        # comments = Comment.objects.all()
+        comments = Comment.objects.filter(Q(author=self.request.user) | Q(
+            issue__assign_to=self.request.user) | Q(issue__author=self.request.user))
+        return comments

@@ -48,10 +48,8 @@ class IssueSerializer(ModelSerializer):
 
     def create(self, validated_data):
 
-        author = self.context['request'].user
+        validated_data['author'] = self.context['request'].user
         project = validated_data['project']
-
-        validated_data['author'] = author
 
         instance = super().create(validated_data)
 
@@ -72,16 +70,6 @@ class CommentSerialiser(ModelSerializer):
         model = Comment
         fields = "__all__"
         read_only_fields = ['author']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        request = self.context.get('request')
-
-        if request and request.user.is_authenticated:
-            self.fields['author'].queryset = self.context['request'].user
-            self.fields['issue'].queryset = Issue.objects.filter(
-                assign_to=request.user)
 
     def create(self, validated_data):
 
