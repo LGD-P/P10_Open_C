@@ -21,15 +21,16 @@ class ProjectViewset(ModelViewSet):
     """
 
     serializer_class = ProjectSerializer
-    permission_classes = [IsContributorPermission, IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsContributorPermission]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
         """Filter queryset to only show projects that logged user is contributor for"""
         # projects = Project.objects.filter(contributor__author=self.request.user).prefetch_related('contributor_set')
         # projects = Project.objects.all()
-        projects = projects = Project.objects.filter(
+        projects = Project.objects.filter(
             contributor__author=self.request.user).prefetch_related('contributor_set')
+
         return projects
 
 
