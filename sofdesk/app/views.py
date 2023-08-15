@@ -25,7 +25,7 @@ class ProjectViewset(ModelViewSet):
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
-        """Filter queryset to only show contributors for the project of the logged in user"""
+        """Filter queryset to only show projects that logged user is contributor for"""
         # projects = Project.objects.filter(contributor__author=self.request.user).prefetch_related('contributor_set')
         # projects = Project.objects.all()
         projects = projects = Project.objects.filter(
@@ -45,7 +45,7 @@ class ContributorViewset(ModelViewSet):
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
-        """Filter queryset to only show contributors for the project of the logged in user"""
+        """Filter queryset to only show contributor as logged user """
 
         # contributors = Contributor.objects.all()
         # contributors = Contributor.objects.select_related('author').filter(Q(author=self.request.user))
@@ -67,13 +67,12 @@ class IssuetViewset(ModelViewSet):
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
-        """Simple query_set to get all Issue
+        """Simple query_set to get all Issue that logged user is author or was assignedto
 
         Returns:
             _type_:all Issue
         """
         # issues = Issue.objects.all()
-
         issues = Issue.objects.filter(
             Q(author=self.request.user) | Q(assign_to=self.request.user))
 
@@ -92,10 +91,11 @@ class CommentViewset(ModelViewSet):
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
-        """Simple query_set to get all Issue
+        """Simple query_set to get all Comment if logged is author or
+        if user is Issue author or if the Issue was assign to him
 
         Returns:
-            _type_:all Issue
+            _type_:all Comment
         """
 
         # comments = Comment.objects.all()

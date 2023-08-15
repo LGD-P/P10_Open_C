@@ -1,7 +1,6 @@
 from rest_framework.serializers import (
     ModelSerializer, CurrentUserDefault)
 
-from django.db.models import Q
 
 from app.models import Project, Contributor, Issue, Comment
 
@@ -53,7 +52,7 @@ class IssueSerializer(ModelSerializer):
 
         instance = super().create(validated_data)
 
-        # Vérifie si le contributor n'existe pas déjà auquel cas ne le crée pas
+        # Check if Contributor already exist else creat it
         if Contributor.objects.filter(author=instance.assign_to, project=project).exists():
             pass
         else:

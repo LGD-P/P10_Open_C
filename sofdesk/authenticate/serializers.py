@@ -44,7 +44,7 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        """Remove date_of_birth from validated_data before user_creation
+        """Creat user and hash password
         """
         password = validated_data.pop('password')
         test_date = validated_data.pop('date_of_birth', None)

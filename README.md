@@ -12,9 +12,9 @@ ___
 # Installation du projet:
 
 ## Cloner le projet:
-
+```bash
     git clone https://github.com/LGD-P/P10_Open_C.git
-
+```
 ## Installer le gestinnaire de dépendances poetry:
     
     pip3 install poetry 

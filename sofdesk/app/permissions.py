@@ -20,6 +20,11 @@ class IsContributorPermission(permissions.BasePermission):
 
 class IsAuthorPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
+        if view.action == 'create':
+
+            project_id = request.data.get('project')
+            project = Project.objects.get(id=project_id)
+            return Project.objects.filter(author=request.user, project_id=project).exists()
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
