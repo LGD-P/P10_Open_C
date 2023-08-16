@@ -21,12 +21,13 @@ class ProjectViewset(ModelViewSet):
     """
 
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated, IsContributorPermission]
+    permission_classes = [IsAuthenticated,
+                          IsAuthorPermissions, IsContributorPermission]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
         """Filter queryset to only show projects that logged user is contributor for"""
-        # projects = Project.objects.prefetch_related('contributor_project').filter(contributor_project__user=self.request.user)
+
         # projects = Project.objects..all()
         projects = Project.objects.prefetch_related('contributor_project').filter(
             contributor_project__user=self.request.user)
@@ -41,16 +42,16 @@ class ContributorViewset(ModelViewSet):
     """
 
     serializer_class = ContributorSerializer
-    permission_classes = [IsAuthenticated, IsAuthorPermissions]
+    permission_classes = [IsAuthenticated,
+                          IsAuthorPermissions, IsContributorPermission]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
         """Filter queryset to only show contributor as logged user """
 
         # contributors = Contributor.objects.all()
-        # contributors = Contributor.objects.select_related('author').filter(Q(author=self.request.user))
         contributors = Contributor.objects.select_related(
-            'author').filter(Q(author=self.request.user))
+            'author').filter(Q(author=self.request.user) | Q(user=self.request.user))
 
         return contributors
 
@@ -63,14 +64,12 @@ class IssuetViewset(ModelViewSet):
     """
 
     serializer_class = IssueSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,
+                          IsAuthorPermissions, IsContributorPermission]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
-        """Simple query_set to get all Issue that logged user is author or was assignedto
-
-        Returns:
-            _type_:all Issue
+        """Simple query_set to get all Issues that logged user is author or was assigned to
         """
         # issues = Issue.objects.all()
         issues = Issue.objects.filter(
@@ -87,15 +86,13 @@ class CommentViewset(ModelViewSet):
     """
 
     serializer_class = CommentSerialiser
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,
+                          IsAuthorPermissions, IsContributorPermission]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
         """Simple query_set to get all Comment if logged is author or
         if user is Issue author or if the Issue was assign to him
-
-        Returns:
-            _type_:all Comment
         """
 
         # comments = Comment.objects.all()

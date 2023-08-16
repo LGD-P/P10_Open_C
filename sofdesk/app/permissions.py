@@ -8,21 +8,15 @@ class IsContributorPermission(permissions.BasePermission):
     def has_permission(self, request, view):
 
         project = request.data.get('project')
-        contributor = request.data.get('contributor')
-        issue = request.data.get('issue')
-        comment = request.data.get('comment')
 
         if request.method in permissions.SAFE_METHODS:
             return True
-        elif view.action == "create" and project:
+        # Allow any user to creat a new project
+        elif view.action == "create" and not project:
             return True
-        elif view.action == "create" and contributor:
-            return True
-        elif view.action == "create" and issue:
-            return True
-        elif view.action == "create" and comment:
-            return True
-
+        # Only contributor can create contributor issue comment
+        elif view.action == "create":
+            return Contributor.objects.filter(user=request.user, project=project).exists()
         return True
 
     def has_object_permission(self, request, view, obj):
