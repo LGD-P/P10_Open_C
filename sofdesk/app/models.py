@@ -11,7 +11,8 @@ class Project(models.Model):
         ("back-end", "back-end"), ("front-end", "front-end"),
         ("iOS", "iOS"), ("Android", "Android")
     )
-    author = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        to=User, on_delete=models.CASCADE, related_name='project_author')
     name = models.CharField(max_length=128, null=False,
                             blank=True, unique=True)
     description = models.TextField(max_length=2048, blank=True)
@@ -24,8 +25,12 @@ class Project(models.Model):
 
 # Rajouter un champ User pour attribuer un utilisateur à l'objet Contributer
 class Contributor(models.Model):
-    author = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    project = models.ForeignKey(to=Project, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        to=User, on_delete=models.CASCADE, related_name='contributor_author')
+    user = models.ForeignKey(
+        to=User, on_delete=models.CASCADE, related_name='contributor_user')
+    project = models.ForeignKey(
+        to=Project, on_delete=models.CASCADE, related_name='contributor_project')
     created_time = models.DateTimeField(auto_now_add=True)
 
 
@@ -43,11 +48,11 @@ class Issue(models.Model):
     )
 
     author = models.ForeignKey(
-        to=User, related_name='author', on_delete=models.CASCADE)
+        to=User, related_name='issue_author', on_delete=models.CASCADE)
     name = models.CharField(max_length=128, null=False, blank=True)
     description = models.TextField(max_length=2048, blank=True)
     assign_to = models.ForeignKey(
-        User, related_name='assigned_issues', on_delete=models.CASCADE)
+        User, related_name='assigned_issue', on_delete=models.CASCADE)
     priority = models.CharField(
         choices=PRIORITY_CHOICES, max_length=15, blank=True)
     tag = models.CharField(choices=TAG_CHOICES, max_length=15, blank=True)
@@ -55,7 +60,7 @@ class Issue(models.Model):
                               max_length=15, blank=True)
     created_time = models.DateTimeField(auto_now_add=True)
     project = models.ForeignKey(
-        to=Project, on_delete=models.CASCADE, related_name='issues')
+        to=Project, on_delete=models.CASCADE, related_name='issue_project')
 
     def __str__(self):
         return self.name
@@ -63,9 +68,10 @@ class Issue(models.Model):
 
 class Comment(models.Model):
     id = models.BigAutoField(primary_key=True)
-    author = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        to=User, on_delete=models.CASCADE, related_name="comment_author")
     description = models.TextField(max_length=2048, blank=True)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     created_time = models.DateTimeField(auto_now_add=True)
     issue = models.ForeignKey(
-        to=Issue, on_delete=models.CASCADE, related_name='comment',)
+        to=Issue, on_delete=models.CASCADE, related_name='comment_issue',)

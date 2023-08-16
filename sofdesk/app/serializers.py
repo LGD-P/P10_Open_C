@@ -26,9 +26,14 @@ class ProjectSerializer(ModelSerializer):
         validated_data['author'] = self.context['request'].user
         instance = super().create(validated_data)
         contributor = Contributor(
-            author=instance.author, project=instance)
+            author=instance.author, project=instance, user=instance.author)
         contributor.save()
         return instance
+
+    def delete(self, instance):
+        contributors = Contributor.objects.filter(project=instance)
+        contributors.delete()
+        instance.delete()
 
 
 class ContributorSerializer(ModelSerializer):
@@ -56,8 +61,8 @@ class IssueSerializer(ModelSerializer):
         if Contributor.objects.filter(author=instance.assign_to, project=project).exists():
             pass
         else:
-            contributor = Contributor(
-                author=instance.assign_to, project=project)
+            contributor = Contributor(author=instance.author,
+                                      user=instance.assign_to, project=project)
             contributor.save()
 
         return instance

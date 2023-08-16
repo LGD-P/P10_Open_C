@@ -9,7 +9,7 @@ from app.models import (Project, Contributor,
 from app.serializers import (ProjectSerializer, ContributorSerializer,
                              IssueSerializer, CommentSerialiser)
 from app.permissions import (
-    IsContributorPermission, IsAuthorPermissions, IssuePermission, CommentPermission)
+    IsContributorPermission, IsAuthorPermissions)
 
 
 class ProjectViewset(ModelViewSet):
@@ -26,11 +26,10 @@ class ProjectViewset(ModelViewSet):
 
     def get_queryset(self):
         """Filter queryset to only show projects that logged user is contributor for"""
-        # projects = Project.objects.filter(contributor__author=self.request.user).prefetch_related('contributor_set')
-        # projects = Project.objects.all()
-        projects = Project.objects.filter(
-            contributor__author=self.request.user).prefetch_related('contributor_set')
-
+        # projects = Project.objects.prefetch_related('contributor_project').filter(contributor_project__user=self.request.user)
+        # projects = Project.objects..all()
+        projects = Project.objects.prefetch_related('contributor_project').filter(
+            contributor_project__user=self.request.user)
         return projects
 
 
@@ -64,7 +63,7 @@ class IssuetViewset(ModelViewSet):
     """
 
     serializer_class = IssueSerializer
-    permission_classes = [IsAuthenticated, IssuePermission]
+    permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
@@ -88,7 +87,7 @@ class CommentViewset(ModelViewSet):
     """
 
     serializer_class = CommentSerialiser
-    permission_classes = [IsAuthenticated, CommentPermission]
+    permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
     def get_queryset(self):
