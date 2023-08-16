@@ -16,12 +16,6 @@ class ProjectSerializer(ModelSerializer):
     def create(self, validated_data):
         """Creat automaticly a Contributor
         when a new project is created
-
-        Args:
-            validated_data (_type_): Project Instance
-
-        Returns:
-            Instance: Project instance
         """
         validated_data['author'] = self.context['request'].user
         instance = super().create(validated_data)
@@ -31,6 +25,9 @@ class ProjectSerializer(ModelSerializer):
         return instance
 
     def delete(self, instance):
+        """Delete automaticly a Contributor
+        when a project is created
+        """
         contributors = Contributor.objects.filter(project=instance)
         contributors.delete()
         instance.delete()
@@ -58,7 +55,7 @@ class IssueSerializer(ModelSerializer):
         instance = super().create(validated_data)
 
         # Check if Contributor already exist else creat it
-        if Contributor.objects.filter(author=instance.assign_to, project=project).exists():
+        if Contributor.objects.filter(user=instance.assign_to, project=project).exists():
             pass
         else:
             contributor = Contributor(author=instance.author,
