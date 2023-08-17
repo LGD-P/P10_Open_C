@@ -50,8 +50,8 @@ class ContributorViewset(ModelViewSet):
         """Filter queryset to only show contributor as logged user """
 
         # contributors = Contributor.objects.all()
-        contributors = Contributor.objects.select_related(
-            'author').filter(Q(author=self.request.user) | Q(user=self.request.user))
+        contributors = Contributor.objects.filter(
+            Q(author=self.request.user) | Q(user=self.request.user)).select_related('author', 'user')
 
         return contributors
 
