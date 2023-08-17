@@ -9,13 +9,16 @@ Il faut alors trouver un moyen standard de traiter les données, ce qui peut se 
 
 ___
 
-# Installation du projet:
+# Installation du projet: 
+*Ce project utilise 
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original-wordmark.svg" width=40 />
+           3.11.*
 
 ## Cloner le projet:
 ```bash
     git clone https://github.com/LGD-P/P10_Open_C.git
 ```
-## Installer le gestinnaire de dépendances poetry:
+## Installer le gestinnaire de dépendances poetry:  <img src="https://python-poetry.org/images/logo-origami.svg" width=30>
     
     pip3 install poetry 
 
@@ -41,7 +44,7 @@ ___
 -----
 
 
-# Listing des End-Points et usages avec Postman ou Curl: 
+# Listing des End-Points: 
 
 
 
@@ -78,7 +81,7 @@ ___
 |PUT or PATCH|api/comment/id|PUT modifie et écrase les données du Comment non renseignées, PATCH modifie uniquement les champs renseignés|
 |DELETE|api/comment/id|Supprime le Comment selon son id|
 
-## Le CRUD avec POSTMAN: 
+## Le CRUD avec POSTMAN: <img src="https://voyager.postman.com/logo/postman-logo-icon-orange.svg"  width=40> 
 
 - *Assurez vous  d'avoir dans le **Header** la clefs Content-Type et la valeur application/json* 
 - *Dans le **Body** les data sont passées en raw format en JSON*
@@ -93,49 +96,57 @@ exemple pour la création d'un utilisateur:
 
 
 
-## Le CRUD exemple d'utilisation avec curl:
+## Le CRUD exemple d'utilisation avec <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Curl-logo.svg" width=70>
 
 * Le flag -X spécifie la méthode HTTP à utiliser, 
-* Le flag -H spécifie l'en-tête de la requête, dans notre cas : "Content-Type: application/json" pour indiquer que les données sont au format JSON.
+* Le flag -H spécifie l'en-tête de la requête, dans notre cas : "Content-Type: application/json" pour indiquer que les données sont au format JSON. et "Authorization" pour le token 
 * Le flag -d spécifie les données à envoyer dans la requête dans notre cas un dictionnaire de données.
-
 
 Pour créer une nouvelle ressource avec curl, vous pouvez utiliser la méthode POST :
 
-    curl -X POST -H "Content-Type: application/json" -d '{
-        "username": "Marie",
-        "age": 32,
-        "can_be_shared": false,
-        "can_be_contacted": false
-    }' http://127.0.0.1:8000/api/user/
+```bash
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Token votre_token" -d '{
+    "username": "Marie",
+    "age": 32,
+    "can_be_shared": false,
+    "can_be_contacted": false
+}' http://127.0.0.1:8000/api/user/
+
+ ```
 
 Pour récupérer une ressource existante avec curl, vous pouvez utiliser la méthode GET :
 
-    curl -X GET http://127.0.0.1:8000/api/user/1/
+```bash
+curl -X GET -H "Authorization: Token votre_token"  http://127.0.0.1:8000/api/user/1/
+
+ ```
 
 Pour mettre à jour une ressource existante avec curl, vous pouvez utiliser la méthode PUT ou PATCH :
 
 Avec PUT (remplacement complet de la ressource) :
 
-    curl -X PUT -H "Content-Type: application/json" -d '{
-        "username": "Marie",
-        "age": 33,
-        "can_be_shared": true,
-        "can_be_contacted": true
-    }' http://127.0.0.1:8000/api/user/1/
+```bash
+curl -X PUT -H "Content-Type: application/json" -H "Authorization: Token votre_token" -d '{
+    "username": "Marie",
+    "age": 33,
+    "can_be_shared": true,
+    "can_be_contacted": true
+}' http://127.0.0.1:8000/api/user/1/
+
+ ```
 
 Avec PATCH (mise à jour partielle de la ressource) :
 
-    curl -X PATCH -H "Content-Type: application/json" -d '{
-        "age": 33
-    }' http://127.0.0.1:8000/api/user/1/
+```bash
+curl -X PATCH -H "Content-Type: application/json" -H "Authorization: Token votre_token" -d '{
+    "age": 33
+}' http://127.0.0.1:8000/api/user/1/
+
+ ```
 
 Pour supprimer une ressource avec curl, vous pouvez utiliser la méthode DELETE :
 
-    curl -X DELETE http://127.0.0.1:8000/api/user/1/
+```bash
+curl -X DELETE -H "Authorization: Token votre_token"  http://127.0.0.1:8000/api/user/1/
 
-
-
-
-
-
+ ```
