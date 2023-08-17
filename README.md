@@ -44,9 +44,12 @@ ___
 -----
 
 
-# Listing des End-Points: 
+<details>
+  <summary style="font-size": 30px;"> Liste des End-Points  </summary>
 
-
+  
+  
+  
 
 |C.R.U.D method|URI & Catégories |Réponse|
 |:-:|:-:|:-:|
@@ -80,10 +83,12 @@ ___
 |POST|api/comment/|Création d'un Comment|
 |PUT or PATCH|api/comment/id|PUT modifie et écrase les données du Comment non renseignées, PATCH modifie uniquement les champs renseignés|
 |DELETE|api/comment/id|Supprime le Comment selon son id|
+</details>
 
 ## Le CRUD avec POSTMAN: <img src="https://voyager.postman.com/logo/postman-logo-icon-orange.svg"  width=40> 
 
 - *Assurez vous  d'avoir dans le **Header** la clefs Content-Type et la valeur application/json* 
+- *Assurez vous d'avoir dans **Authorization** le Bearer Token correspondant à votre utilisateur*
 - *Dans le **Body** les data sont passées en raw format en JSON*
 
 exemple pour la création d'un utilisateur: 
@@ -91,7 +96,7 @@ exemple pour la création d'un utilisateur:
 
 |Method|URL|URI|Body (raw JSON)|
 |:-:|:-:|:-:|:-:|
-|POST|127.0.0.1:8000/|api/user/|{"username": "Marie","age": 32, "can_be_shared": false, "can_be_contacted": false}|
+|POST|127.0.0.1:8000/|api/user/|{"username": "Marie","date_of_birth":"1984-12-12", "can_be_shared": false, "can_be_contacted": false}|
 
 
 
@@ -107,7 +112,7 @@ Pour créer une nouvelle ressource avec curl, vous pouvez utiliser la méthode P
 ```bash
 curl -X POST -H "Content-Type: application/json" -H "Authorization: Token votre_token" -d '{
     "username": "Marie",
-    "age": 32,
+    "date_of_birth":"1984-12-12",
     "can_be_shared": false,
     "can_be_contacted": false
 }' http://127.0.0.1:8000/api/user/
@@ -128,7 +133,7 @@ Avec PUT (remplacement complet de la ressource) :
 ```bash
 curl -X PUT -H "Content-Type: application/json" -H "Authorization: Token votre_token" -d '{
     "username": "Marie",
-    "age": 33,
+    "date_of_birth":"1984-10-12",
     "can_be_shared": true,
     "can_be_contacted": true
 }' http://127.0.0.1:8000/api/user/1/
@@ -139,7 +144,7 @@ Avec PATCH (mise à jour partielle de la ressource) :
 
 ```bash
 curl -X PATCH -H "Content-Type: application/json" -H "Authorization: Token votre_token" -d '{
-    "age": 33
+    "date_of_birth":"1984-12-13"
 }' http://127.0.0.1:8000/api/user/1/
 
  ```
