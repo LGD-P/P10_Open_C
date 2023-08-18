@@ -30,6 +30,10 @@ ___
 
     poetry install 
 
+*Si vous utiliser une version moins récente de python:* 
+*dans le fichier pyproject.toml ==> [tool.poetry.dependencies] remplacez `python = "^3.11" 
+par votre version  ==> "python = "^3.10" puis lancez la commande 'poetry udpade'*
+
 
 ## Appliquer une 1ère migration:
 
@@ -45,7 +49,7 @@ ___
 
 
 <details>
-  <summary style="font-size: 30px;"> Liste des End-Points  </summary>
+  <summary style="font-size: 40px;"> Liste des End-Points  </summary>
 
 |C.R.U.D method|URI & Catégories |Réponse|
 |:-:|:-:|:-:|
