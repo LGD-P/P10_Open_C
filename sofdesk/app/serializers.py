@@ -1,6 +1,6 @@
 from rest_framework.serializers import (
     ModelSerializer, CurrentUserDefault)
-
+from rest_framework.exceptions import ValidationError
 
 from app.models import Project, Contributor, Issue, Comment
 
@@ -25,7 +25,7 @@ class ProjectSerializer(ModelSerializer):
         return instance
 
     def delete(self, instance):
-        """Delete automaticly a Contributor
+        """Delete automaticly a Contributors
         when a project is created
         """
         contributors = Contributor.objects.filter(project=instance)
@@ -38,6 +38,25 @@ class ContributorSerializer(ModelSerializer):
     class Meta:
         model = Contributor
         fields = "__all__"
+
+        read_only_fields = ['author']
+
+    def create(self, validated_data):
+        author = self.context['request'].user
+        user = validated_data['user']
+        project = validated_data['project']
+
+        if Contributor.objects.filter(author=author, user=user, project=project).exists():
+            # Contributor already exist ==> raise error and pass
+            instance = None
+            message = f"Le contributeur {user.username} est déjà associé au projet."
+            raise ValidationError(message)
+        else:
+            # New instance creation allowed
+            validated_data['author'] = author
+            instance = super().create(validated_data)
+
+        return instance
 
 
 class IssueSerializer(ModelSerializer):

@@ -23,7 +23,6 @@ class Project(models.Model):
         return self.name
 
 
-# Rajouter un champ User pour attribuer un utilisateur à l'objet Contributer
 class Contributor(models.Model):
     author = models.ForeignKey(
         to=User, on_delete=models.CASCADE, related_name='contributor_author')

@@ -45,11 +45,7 @@ ___
 
 
 <details>
-  <summary style="font-size": 30px;"> Liste des End-Points  </summary>
-
-  
-  
-  
+  <summary style="font-size: 30px;"> Liste des End-Points  </summary>
 
 |C.R.U.D method|URI & Catégories |Réponse|
 |:-:|:-:|:-:|

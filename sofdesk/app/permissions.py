@@ -14,7 +14,7 @@ class IsContributorPermission(permissions.BasePermission):
         # Allow any user to creat a new project
         elif view.action == "create" and not project:
             return True
-        # Only contributor can create contributor issue comment
+        # Only contributor can create contributor, issue and comment
         elif view.action == "create":
             return Contributor.objects.filter(user=request.user, project=project).exists()
         return True

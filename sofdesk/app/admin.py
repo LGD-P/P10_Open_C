@@ -5,7 +5,7 @@ from .models import Contributor, Project, Issue, Comment
 
 @admin.register(Contributor)
 class ContributorAdmin(admin.ModelAdmin):
-    list_display = ["author", "project", "created_time"]
+    list_display = ["author", "user", "project", "created_time"]
     list_filter = list_display
 
 
