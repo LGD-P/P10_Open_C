@@ -11,6 +11,8 @@ djangorestframework = "^3.14.0"
 django-debug-toolbar = "^4.1.0"
 drf-nested-routers = "^0.93.4"
 djangorestframework-simplejwt = "^5.2.2"
+flake8 = "^6.1.0"
+flake8-html = "^0.4.3"
 
 
 [build-system]
